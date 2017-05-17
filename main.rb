@@ -3,7 +3,7 @@ require 'httparty'
 require 'telegram/bot'
 
 
-token = '307623077:AAFGiQtnFsb5kVvnKtzDedSUOUpEDVTVfnI'
+token = '{token}'
 
 
 def extract
