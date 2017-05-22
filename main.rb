@@ -13,7 +13,7 @@ def extract(tag)
 
 	result = content.css('a[class=question-hyperlink]')
 
-	return result.last.text
+	return "Last question asked:\n\n#{result.last.text}"
 end
 
 
@@ -22,15 +22,30 @@ def bot(token)
 		bot.listen do |message|
 			case message.text
 			when '/stackoverflow'
-				bot.api.send_message(chat_id: message.chat.id, text: extract)
+				bot.api.send_message(
+					chat_id: message.chat.id,
+					text: extract
+					)
 			when '/stackoverflow php'
-				bot.api.send_message(chat_id: message.chat.id, text: extract('php'))
+				bot.api.send_message(
+					chat_id: message.chat.id,
+					text: extract('php')
+					)
 			when '/stackoverflow javascript'
-				bot.api.send_message(chat_id: message.chat.id, text: extract('javascript'))
+				bot.api.send_message(
+					chat_id: message.chat.id,
+					text: extract('javascript')
+					)
 			when '/stackoverflow c#'
-				bot.api.send_message(chat_id: message.chat.id, text: extract('c#'))
+				bot.api.send_message(
+					chat_id: message.chat.id,
+					text: extract('c#')
+					)
 			when '/stackoverflow python'
-				bot.api.send_message(chat_id: message.chat.id, text: extract('python'))
+				bot.api.send_message(
+					chat_id: message.chat.id,
+					text: extract('python')
+					)
 			end
 		end
 	end
