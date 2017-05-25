@@ -20,11 +20,26 @@ end
 def bot(token)
 	Telegram::Bot::Client.run(token) do |bot|
 		bot.listen do |message|
+			welcome = message.new_chat_member
+			goodbye = message.left_chat_member
+
+			if welcome
+					bot.api.send_message(
+					chat_id: message.chat.id,
+					text: "Welcome, #{message.new_chat_member.first_name}"
+					)
+			elsif goodbye
+					bot.api.send_message(
+					chat_id: message.chat.id,
+					text: "Adios, #{message.left_chat_member.first_name}"
+					)
+			end
+
 			case message.text
 			when '/stackoverflow'
 				bot.api.send_message(
 					chat_id: message.chat.id,
-					text: extract
+					text: "Usage: '/stackoverflow + tag' to get the last question asked on tag"
 					)
 			when '/stackoverflow php'
 				bot.api.send_message(
@@ -46,6 +61,11 @@ def bot(token)
 					chat_id: message.chat.id,
 					text: extract('python')
 					)
+#			when "/ban #{message.from.username}"
+#				bot.api.kickChatMember(
+#					chat_id: message.chat.id,
+#					user_id: 392907432
+#					)
 			end
 		end
 	end
