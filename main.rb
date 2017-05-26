@@ -22,17 +22,34 @@ def bot(token)
 		bot.listen do |message|
 			welcome = message.new_chat_member
 			goodbye = message.left_chat_member
+			ban = message.reply_to_message
 
 			if welcome
-					bot.api.send_message(
+				bot.api.send_message(
 					chat_id: message.chat.id,
 					text: "Welcome, #{message.new_chat_member.first_name}"
-					)
+				)
 			elsif goodbye
-					bot.api.send_message(
+				bot.api.send_message(
 					chat_id: message.chat.id,
 					text: "Adios, #{message.left_chat_member.first_name}"
+				)
+			elsif ban
+				member = bot.api.getChatMember(
+					chat_id: message.chat.id,
+					user_id: message.from.id
 					)
+
+				if member["result"]["status"] == "administrator" or member["result"]["status"] == "creator"
+					bot.api.send_message(
+						chat_id: message.chat.id,
+						text: "You're banned, #{ban.from.first_name}"
+						)
+					bot.api.kickChatMember(
+						chat_id: message.chat.id,
+						user_id: ban.from.id
+						)
+				end
 			end
 
 			case message.text
@@ -61,11 +78,6 @@ def bot(token)
 					chat_id: message.chat.id,
 					text: extract('python')
 					)
-#			when "/ban #{message.from.username}"
-#				bot.api.kickChatMember(
-#					chat_id: message.chat.id,
-#					user_id: 392907432
-#					)
 			end
 		end
 	end
