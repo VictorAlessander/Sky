@@ -20,21 +20,21 @@ end
 def bot(token)
 	Telegram::Bot::Client.run(token) do |bot|
 		bot.listen do |message|
-			welcome = message.new_chat_member
-			goodbye = message.left_chat_member
-			ban = message.reply_to_message
+			welcome_user = message.new_chat_member
+			goodbye_user = message.left_chat_member
+			ban_user = message.reply_to_message
 
-			if welcome
+			if welcome_user
 				bot.api.send_message(
 					chat_id: message.chat.id,
 					text: "Welcome, #{message.new_chat_member.first_name}"
 				)
-			elsif goodbye
+			elsif goodbye_user
 				bot.api.send_message(
 					chat_id: message.chat.id,
 					text: "Adios, #{message.left_chat_member.first_name}"
 				)
-			elsif ban
+			elsif ban_user and message.text == "/ban"
 				member = bot.api.getChatMember(
 					chat_id: message.chat.id,
 					user_id: message.from.id
@@ -43,11 +43,11 @@ def bot(token)
 				if member["result"]["status"] == "administrator" or member["result"]["status"] == "creator"
 					bot.api.send_message(
 						chat_id: message.chat.id,
-						text: "You're banned, #{ban.from.first_name}"
+						text: "You're banned, #{ban_user.from.first_name}"
 						)
 					bot.api.kickChatMember(
 						chat_id: message.chat.id,
-						user_id: ban.from.id
+						user_id: ban_user.from.id
 						)
 				end
 			end
